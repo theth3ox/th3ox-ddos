@@ -1,0 +1,13 @@
+cloudscraper==1.2.71
+certifi==2024.7.4
+dnspython==2.6.1
+requests==2.32.4
+psutil>=5.9.3
+icmplib>=2.1.1
+pyasn1==0.4.8
+yarl>=1.7.2
+pyroxy @ https://github.com/MatrixTM/PyRoxy/archive/refs/heads/master.zip
+# impacket>=0.11.0  # Optional - Only needed for SYN attacks
+# Install manually if you need SYN method:
+# pip install impacket --user
+# OR run PowerShell as Administrator
